@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="conteudo">
+
+        <h:form id="formLista">
+            <p:panel header="Relatório de Visitas Agendadas">
+
+                <p:dataTable id="tabela" value="#{agendamentoBean.agendamentos}" var="agendamento"
+                             rowKey="#{agendamento.id}"
+                             paginator="true" rows="10" 
+                             emptyMessage="Nenhum agendamento encontrado.">
+
+                    <p:column style="width:2rem" ariaHeaderText="Detalhes">
+                        <p:rowToggler />
+                    </p:column>
+
+                    <p:column headerText="ID" sortBy="#{agendamento.id}" width="50">
+                        <h:outputText value="#{agendamento.id}" />
+                    </p:column>
+
+                    <p:column headerText="Museu" sortBy="#{agendamento.museu.nome}">
+                        <h:outputText value="#{agendamento.museu.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Data" sortBy="#{agendamento.dataVisita}">
+                        <h:outputText value="#{agendamento.dataVisita}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Horário">
+                        <h:outputText value="#{agendamento.horarioVisita}" />
+                    </p:column>
+
+                    <p:column headerText="Responsável">
+                        <h:outputText value="#{agendamento.emailResponsavel}" />
+                    </p:column>
+                    
+                    <p:column headerText="Cód. Confirmação">
+                        <h:outputText value="#{agendamento.codigoConfirmacao}" style="font-weight: bold; color: blue;"/>
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <div style="padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; margin: 10px;">
+                            <h4>Visitantes deste grupo:</h4>
+                            
+                            <p:dataTable value="#{agendamento.pessoas}" var="pessoa" size="small">
+                                <p:column headerText="Nome do Visitante">
+                                    <h:outputText value="#{pessoa.nome}" />
+                                </p:column>
+                                
+                                <p:column headerText="CPF">
+                                    <h:outputText value="#{pessoa.cpf}" />
+                                </p:column>
+                                
+                                <p:column headerText="Tipo Ingresso">
+                                    <h:outputText value="#{pessoa.tipoIngresso}" />
+                                </p:column>
+
+                                <p:column headerText="Compareceu?">
+                                    <p:selectBooleanCheckbox value="#{pessoa.compareceu}" disabled="true" />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </p:rowExpansion>
+
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="conteudo">
+        
+        <p:panel header="Dashboard">
+            <h2>Bem-vindo ao Sistema de Gestão de Museus</h2>
+            <p>Selecione uma opção no menu acima para começar.</p>
+            
+            <p:divider />
+            
+            <div style="display: flex; gap: 20px;">
+                <p:card style="width: 25rem; margin-bottom: 2em">
+                    <f:facet name="title">Museu Municipal</f:facet>
+                    <p>Status: Aberto</p>
+                    <p>Horário: 13h às 17:30h</p>
+                </p:card>
+
+                <p:card style="width: 25rem; margin-bottom: 2em">
+                    <f:facet name="title">Museu da Loucura</f:facet>
+                    <p>Status: Aberto</p>
+                    <p>Horário: 09h às 17h</p>
+                </p:card>
+            </div>
+            
+        </p:panel>
+
+    </ui:define>
+
+</ui:composition>
+</html>

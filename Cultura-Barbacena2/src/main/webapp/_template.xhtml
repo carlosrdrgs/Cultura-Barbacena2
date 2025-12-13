@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Sistema de Museus</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        .cabecalho { background-color: #2c3e50; padding: 10px; margin-bottom: 20px; }
+        .conteudo { padding: 20px; }
+        .rodape { text-align: center; padding: 10px; margin-top: 50px; color: #888; border-top: 1px solid #ccc; }
+    </style>
+</h:head>
+
+<h:body>
+
+    <div class="card">
+        <h:form>
+            <p:menubar>
+                <p:menuitem value="Início" icon="pi pi-home" action="index?faces-redirect=true" />
+
+                <p:submenu label="Visitas" icon="pi pi-calendar">
+                    <p:menuitem value="Novo Agendamento" icon="pi pi-plus" 
+                                action="agendamento?faces-redirect=true"/>
+                    
+                    <p:menuitem value="Relatório de Agendamentos" icon="pi pi-list" 
+                                action="lista-agendamentos?faces-redirect=true"/>
+                </p:submenu>
+
+                <p:submenu label="Visitas" icon="pi pi-calendar">
+                    <p:menuitem value="Novo Agendamento" icon="pi pi-plus" />
+                    <p:menuitem value="Listar Agendamentos" icon="pi pi-list" />
+                </p:submenu>
+
+                <f:facet name="options">
+                    <span style="margin-right: 20px;">Olá, #{usuarioLogado.nomeCompleto}</span>
+                    <p:commandButton value="Sair" styleClass="ui-button-info" action="#{loginBean.logout}"/>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+    </div>
+
+    <div id="conteudo" class="conteudo">
+        <ui:insert name="conteudo">
+        </ui:insert>
+    </div>
+
+    <div class="rodape">
+        <p>Prefeitura de Barbacena - Sistema de Museus 2025</p>
+    </div>
+
+</h:body>
+</html>

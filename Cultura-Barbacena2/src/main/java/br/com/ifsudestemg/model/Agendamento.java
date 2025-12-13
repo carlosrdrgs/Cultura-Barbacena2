@@ -1,7 +1,9 @@
 package br.com.ifsudestemg.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,16 +25,24 @@ public class Agendamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "data_visita", nullable = false)
     private LocalDate dataVisita;
+
+    @Column(name = "horario_visita", nullable = false)
     private LocalTime horarioVisita;
+
+    @Column(name = "email_responsavel")
     private String emailResponsavel;
+
+    @Column(name = "codigo_confirmacao")
     private String codigoConfirmacao;
+    
     private String observacoes;
 
     @ManyToOne
     private Museu museu;
 
-    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PessoaAgendada> pessoas = new ArrayList<>();
 
     public Agendamento() {}
@@ -44,32 +54,26 @@ public class Agendamento implements Serializable {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public LocalDate getDataVisita() { return dataVisita; }
     public void setDataVisita(LocalDate dataVisita) { this.dataVisita = dataVisita; }
-
     public LocalTime getHorarioVisita() { return horarioVisita; }
     public void setHorarioVisita(LocalTime horarioVisita) { this.horarioVisita = horarioVisita; }
-
     public String getEmailResponsavel() { return emailResponsavel; }
     public void setEmailResponsavel(String emailResponsavel) { this.emailResponsavel = emailResponsavel; }
-
     public String getCodigoConfirmacao() { return codigoConfirmacao; }
     public void setCodigoConfirmacao(String codigoConfirmacao) { this.codigoConfirmacao = codigoConfirmacao; }
-    
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
-
     public Museu getMuseu() { return museu; }
     public void setMuseu(Museu museu) { this.museu = museu; }
-
     public List<PessoaAgendada> getPessoas() { return pessoas; }
     public void setPessoas(List<PessoaAgendada> pessoas) { this.pessoas = pessoas; }
-
-    @Override
-    public int hashCode() { return Objects.hash(id); }
-
-    @Override
+    
+    @Override 
+    public int hashCode() {
+    	return Objects.hash(id); 
+    	}
+    @Override 
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;

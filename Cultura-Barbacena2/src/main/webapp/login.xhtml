@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Login - Sistema de Museus</title>
+</h:head>
+
+<h:body style="background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh;">
+
+    <h:form>
+        <p:messages id="messages" />
+
+        <p:panel header="Acesso ao Sistema" style="width: 350px;">
+            <h:panelGrid columns="2" cellpadding="5" style="width: 100%">
+                
+                <h:outputLabel for="login" value="Login:" />
+                <p:inputText id="login" value="#{loginBean.usuario.login}" required="true" 
+                             requiredMessage="Login é obrigatório" style="width: 100%"/>
+
+                <h:outputLabel for="senha" value="Senha:" />
+                <p:password id="senha" value="#{loginBean.usuario.senha}" required="true" 
+                            requiredMessage="Senha é obrigatória" style="width: 100%"/>
+
+            </h:panelGrid>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <p:commandButton value="Entrar" action="#{loginBean.efetuaLogin}" 
+                                 update="messages" styleClass="ui-button-primary" />
+            </div>
+        </p:panel>
+    </h:form>
+
+</h:body>
+</html>
