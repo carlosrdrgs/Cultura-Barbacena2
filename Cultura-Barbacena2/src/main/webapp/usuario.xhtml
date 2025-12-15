@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="conteudo">
+
+        <h:form id="formUsuarios">
+            <p:growl id="msgs" showDetail="false" life="3000"/>
+
+            <p:panel header="Cadastro de Usuários e Permissões">
+                <h:panelGrid columns="2" cellpadding="5">
+                    
+                    <p:outputLabel value="Nome Completo:" for="nome" />
+                    <p:inputText id="nome" value="#{usuarioBean.usuario.nomeCompleto}" 
+                                 required="true" size="40"/>
+
+                    <p:outputLabel value="Login:" for="login" />
+                    <p:inputText id="login" value="#{usuarioBean.usuario.login}" 
+                                 required="true" />
+
+                    <p:outputLabel value="Senha:" for="senha" />
+                    <p:password id="senha" value="#{usuarioBean.usuario.senha}" 
+                                required="true" toggleMask="true" redisplay="true"/>
+                    
+                    <p:outputLabel value="Perfil:" for="perfil" />
+                    <p:selectOneMenu id="perfil" value="#{usuarioBean.usuario.perfil}" required="true" style="width:200px">
+                        <f:selectItem itemLabel="Selecione..." itemValue=""/>
+                        <f:selectItem itemLabel="Administrador Geral" itemValue="ADMIN"/>
+                        <f:selectItem itemLabel="Funcionário de Museu" itemValue="FUNCIONARIO"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Vincular ao Museu:" for="museu" />
+                    <p:selectOneMenu id="museu" value="#{usuarioBean.museuSelecionadoId}" style="width:200px">
+                        <f:selectItem itemLabel="Sem vínculo (Apenas Admin)" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{usuarioBean.listaMuseus}" var="m" 
+                                       itemLabel="#{m.nome}" itemValue="#{m.id}"/>
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Salvar Usuário" action="#{usuarioBean.salvar}" 
+                                     update="formUsuarios" icon="pi pi-save"/>
+                </f:facet>
+            </p:panel>
+
+            <p:spacer height="20"/>
+
+            <p:panel header="Lista de Usuários">
+                <p:dataTable value="#{usuarioBean.listaUsuarios}" var="u" 
+                             emptyMessage="Nenhum usuário cadastrado.">
+                    
+                    <p:column headerText="ID" width="50">
+                        <h:outputText value="#{u.id}" />
+                    </p:column>
+
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{u.nomeCompleto}" />
+                    </p:column>
+
+                    <p:column headerText="Login">
+                        <h:outputText value="#{u.login}" />
+                    </p:column>
+                    
+                    <p:column headerText="Perfil">
+                        <p:tag value="#{u.perfil}" severity="#{u.perfil == 'ADMIN' ? 'danger' : 'success'}" />
+                    </p:column>
+
+                    <p:column headerText="Museu Vinculado">
+                        <h:outputText value="#{u.museu != null ? u.museu.nome : '---'}" />
+                    </p:column>
+
+                    <p:column headerText="Ações" width="120" style="text-align: center;">
+                        <p:commandButton icon="pi pi-pencil" 
+                                         action="#{usuarioBean.editar(u)}"
+                                         update="@form"
+                                         styleClass="ui-button-warning ui-button-flat"
+                                         title="Editar"/>
+
+                        <p:commandButton icon="pi pi-trash" 
+                                         action="#{usuarioBean.remover(u)}"
+                                         update="@form"
+                                         styleClass="ui-button-danger ui-button-flat"
+                                         title="Excluir">
+                             <p:confirm header="Atenção" message="Remover este usuário?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+</html>

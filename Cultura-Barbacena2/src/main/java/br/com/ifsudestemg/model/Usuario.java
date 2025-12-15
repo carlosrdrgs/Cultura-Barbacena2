@@ -1,11 +1,13 @@
 package br.com.ifsudestemg.model;
 
 import jakarta.persistence.Column;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -26,6 +28,10 @@ public class Usuario implements Serializable {
     
     private String perfil; 
 
+    @ManyToOne
+    @JoinColumn(name = "museu_id")
+    private Museu museu;
+
     public Usuario() {}
 
     public Long getId() { return id; }
@@ -42,6 +48,9 @@ public class Usuario implements Serializable {
 
     public String getPerfil() { return perfil; }
     public void setPerfil(String perfil) { this.perfil = perfil; }
+
+    public Museu getMuseu() { return museu; }
+    public void setMuseu(Museu museu) { this.museu = museu; }
 
     @Override
     public int hashCode() { return Objects.hash(id); }

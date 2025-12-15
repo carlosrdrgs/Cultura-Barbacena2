@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="_template.xhtml">
+
+    <ui:define name="conteudo">
+        
+        <h:form id="formCancelamento">
+            <p:growl id="msg" showDetail="false" life="4000"/>
+
+            <p:panel header="Consultar e Cancelar Agendamento">
+                <p>Informe os dados abaixo para localizar seu agendamento.</p>
+                
+                <h:panelGrid columns="3" cellpadding="5">
+                    <p:outputLabel value="Código de Confirmação:" for="cod" />
+                    <p:inputText id="cod" value="#{cancelamentoBean.codigoBusca}" required="true" 
+                                 placeholder="Ex: A1B2C3D4"/>
+                    
+                    <p:message for="cod"/>
+
+                    <p:outputLabel value="E-mail do Responsável:" for="email" />
+                    <p:inputText id="email" value="#{cancelamentoBean.emailBusca}" required="true" 
+                                 placeholder="Ex: joao@email.com"/>
+                    
+                    <p:message for="email"/>
+                </h:panelGrid>
+                
+                <p:commandButton value="Consultar" action="#{cancelamentoBean.buscar}" 
+                                 update="@form" icon="pi pi-search" styleClass="ui-button-primary"/>
+            </p:panel>
+
+            <p:spacer height="20" />
+
+            <p:panel header="Dados do Agendamento" rendered="#{cancelamentoBean.agendamentoEncontrado != null}">
+                
+                <div style="background-color: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <h3>Museu: #{cancelamentoBean.agendamentoEncontrado.museu.nome}</h3>
+                    <p><strong>Data:</strong> 
+                        <h:outputText value="#{cancelamentoBean.agendamentoEncontrado.dataVisita}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                         às #{cancelamentoBean.agendamentoEncontrado.horarioVisita}
+                    </p>
+                </div>
+
+                <p:dataTable value="#{cancelamentoBean.agendamentoEncontrado.pessoas}" var="p">
+                    <f:facet name="header">Visitantes do Grupo</f:facet>
+                    
+                    <p:column headerText="Nome">#{p.nome}</p:column>
+                    <p:column headerText="CPF">#{p.cpf}</p:column>
+                    <p:column headerText="Ingresso">#{p.tipoIngresso}</p:column>
+                    
+                    <p:column headerText="Cancelar Visitante" style="text-align: center; width: 150px;">
+                        <p:commandButton icon="pi pi-trash" 
+                                         action="#{cancelamentoBean.cancelarPessoa(p)}"
+                                         update="@form"
+                                         styleClass="ui-button-warning ui-button-rounded ui-button-flat"
+                                         title="Remover esta pessoa">
+                             <p:confirm header="Confirmar" message="Remover #{p.nome} do grupo?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <p:commandButton value="Cancelar Agendamento Completo (Todos)" 
+                                     action="#{cancelamentoBean.cancelarAgendamento}" 
+                                     update="@form" 
+                                     icon="pi pi-times" 
+                                     styleClass="ui-button-danger"
+                                     style="width: 100%;">
+                        <p:confirm header="CUIDADO" message="Tem certeza que deseja cancelar TUDO? Essa ação não pode ser desfeita." icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </div>
+
+            </p:panel>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+</html>

@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import br.com.ifsudestemg.dao.UsuarioDAO;
 import br.com.ifsudestemg.model.Usuario;
-
-// IMPORTANTE: Estas são as anotações corretas para Tomcat 11 + Jakarta EE 10
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -21,10 +19,11 @@ public class LoginBean implements Serializable {
 
     public String efetuaLogin() {
         UsuarioDAO dao = new UsuarioDAO();
-        boolean existe = dao.existe(this.usuario);
+        
+        Usuario usuarioEncontrado = dao.existe(this.usuario);
 
-        if (existe) {
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", this.usuario);
+        if (usuarioEncontrado != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", usuarioEncontrado);
             return "index?faces-redirect=true";
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

@@ -20,24 +20,37 @@
     <div class="card">
         <h:form>
             <p:menubar>
-                <p:menuitem value="Início" icon="pi pi-home" action="index?faces-redirect=true" />
+                <p:menuitem value="Início" icon="pi pi-home" action="index?faces-redirect=true" 
+                            rendered="#{usuarioLogado != null}"/>
 
                 <p:submenu label="Visitas" icon="pi pi-calendar">
                     <p:menuitem value="Novo Agendamento" icon="pi pi-plus" 
-                                action="agendamento?faces-redirect=true"/>
+                               action="agendamento?faces-redirect=true"/>
+
+                    <p:menuitem value="Consultar/Cancelar" icon="pi pi-search" 
+                               action="cancelamento?faces-redirect=true"/>
                     
                     <p:menuitem value="Relatório de Agendamentos" icon="pi pi-list" 
-                                action="lista-agendamentos?faces-redirect=true"/>
+                       action="lista-agendamentos?faces-redirect=true"
+                       rendered="#{usuarioLogado != null}"/>
                 </p:submenu>
-
-                <p:submenu label="Visitas" icon="pi pi-calendar">
-                    <p:menuitem value="Novo Agendamento" icon="pi pi-plus" />
-                    <p:menuitem value="Listar Agendamentos" icon="pi pi-list" />
+                
+                <p:submenu label="Administração" icon="pi pi-cog" 
+                           rendered="#{usuarioLogado != null and usuarioLogado.perfil eq 'ADMIN'}">
+                    <p:menuitem value="Gerenciar Usuários" icon="pi pi-users" 
+                                action="usuario?faces-redirect=true"/>
                 </p:submenu>
 
                 <f:facet name="options">
-                    <span style="margin-right: 20px;">Olá, #{usuarioLogado.nomeCompleto}</span>
-                    <p:commandButton value="Sair" styleClass="ui-button-info" action="#{loginBean.logout}"/>
+                    <h:panelGroup rendered="#{usuarioLogado != null}">
+                        <span style="margin-right: 20px; font-weight: bold;">Olá, #{usuarioLogado.nomeCompleto}</span>
+                        <p:commandButton value="Sair" styleClass="ui-button-info" action="#{loginBean.logout}" icon="pi pi-power-off"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{usuarioLogado == null}">
+                        <span style="margin-right: 20px;">Visitante</span>
+                        <p:button value="Área Administrativa" outcome="login" icon="pi pi-user" styleClass="ui-button-secondary"/>
+                    </h:panelGroup>
                 </f:facet>
             </p:menubar>
         </h:form>

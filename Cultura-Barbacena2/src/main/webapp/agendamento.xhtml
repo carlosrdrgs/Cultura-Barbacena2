@@ -1,108 +1,138 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="jakarta.faces.facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="jakarta.faces.facelets">
 
 <ui:composition template="_template.xhtml">
 
-    <ui:define name="conteudo">
-        
-        <h:form id="formAgendamento">
-            <p:growl id="growl" showDetail="false" sticky="false" life="4000" />
+	<ui:define name="conteudo">
 
-            <p:panel header="Novo Agendamento" style="margin-bottom: 20px;">
-                <h:panelGrid columns="2" cellpadding="5">
-                    
-                    <p:outputLabel value="Selecione o Museu:" for="museu" />
-                    <p:selectOneMenu id="museu" value="#{agendamentoBean.museuSelecionadoId}" 
-                                     required="true" requiredMessage="O Museu é obrigatório" style="width: 250px;">
-                        <f:selectItem itemLabel="Selecione..." itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{agendamentoBean.listaMuseus}" var="m" 
-                                       itemLabel="#{m.nome}" itemValue="#{m.id}"/>
-                    </p:selectOneMenu>
+		<h:form id="formAgendamento">
+			<p:growl id="growl" showDetail="false" sticky="false" life="4000" />
 
-                    <p:outputLabel value="Data da Visita:" for="data" />
-                    <p:datePicker id="data" value="#{agendamentoBean.agendamento.dataVisita}" 
-                                  required="true" showIcon="true" />
+			<p:panel header="Novo Agendamento" style="margin-bottom: 20px;">
+				<h:panelGrid columns="2" cellpadding="5">
 
-                    <p:outputLabel value="Horário:" for="hora" />
-                    <p:datePicker id="hora" value="#{agendamentoBean.agendamento.horarioVisita}" 
-                                  timeOnly="true" pattern="HH:mm" required="true" showIcon="true"/>
+					<p:outputLabel value="Selecione o Museu:" for="museu" />
+					<p:selectOneMenu id="museu"
+						value="#{agendamentoBean.museuSelecionadoId}" required="true"
+						requiredMessage="O Museu é obrigatório" style="width: 250px;">
+						<f:selectItem itemLabel="Selecione..." itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{agendamentoBean.listaMuseus}" var="m"
+							itemLabel="#{m.nome}" itemValue="#{m.id}" />
 
-                    <p:outputLabel value="Email Responsável:" for="email" />
-                    <p:inputText id="email" value="#{agendamentoBean.agendamento.emailResponsavel}" 
-                                 required="true" size="40"/>
-                    
-                    <p:outputLabel value="Observações:" for="obs" />
-                    <p:inputTextarea id="obs" value="#{agendamentoBean.agendamento.observacoes}" rows="3" cols="40"/>
-                </h:panelGrid>
-            </p:panel>
+						<p:ajax listener="#{agendamentoBean.verificarDisponibilidade}"
+							update="msgVagas" />
+					</p:selectOneMenu>
 
-            <p:panel id="panelPessoa" header="Incluir Visitantes" style="margin-bottom: 20px;">
-                
-                <h:panelGrid columns="4" cellpadding="5">
-                    <p:outputLabel value="Nome:" />
-                    <p:inputText value="#{agendamentoBean.pessoa.nome}" />
+					<p:outputLabel value="Data da Visita:" for="data" />
+					<p:datePicker id="data"
+						value="#{agendamentoBean.agendamento.dataVisita}" required="true"
+						showIcon="true">
+						<p:ajax event="dateSelect"
+							listener="#{agendamentoBean.verificarDisponibilidade}"
+							update="msgVagas" />
+					</p:datePicker>
 
-                    <p:outputLabel value="CPF:" />
-                    <p:inputMask value="#{agendamentoBean.pessoa.cpf}" mask="999.999.999-99"/>
+					<p:outputLabel value="Horário:" for="hora" />
+					<p:datePicker id="hora"
+						value="#{agendamentoBean.agendamento.horarioVisita}"
+						timeOnly="true" pattern="HH:mm" required="true" showIcon="true"
+						stepMinute="60">
+						<p:ajax event="dateSelect"
+							listener="#{agendamentoBean.verificarDisponibilidade}"
+							update="msgVagas" />
+					</p:datePicker>
 
-                    <p:outputLabel value="Tipo Ingresso:" />
-                    <p:selectOneMenu value="#{agendamentoBean.pessoa.tipoIngresso}" style="width: 150px;">
-                        <f:selectItem itemLabel="Inteira" itemValue="INTEIRA"/>
-                        <f:selectItem itemLabel="Meia" itemValue="MEIA"/>
-                        <f:selectItem itemLabel="Isento" itemValue="ISENTO"/>
-                    </p:selectOneMenu>
+					<p:outputLabel value="Status:" />
+					<h:outputText id="msgVagas"
+						value="#{agendamentoBean.mensagemDisponibilidade}"
+						style="font-weight: bold; font-size: 1.1em; color: blue;" />
 
-                    <p:commandButton value="Adicionar" icon="pi pi-plus" 
-                                     action="#{agendamentoBean.adicionarPessoa}"
-                                     process="panelPessoa" 
-                                     update="tabelaPessoas panelPessoa growl" 
-                                     styleClass="ui-button-secondary"/>
-                </h:panelGrid>
-            </p:panel>
+					<p:outputLabel value="Email Responsável:" for="email" />
+					<p:inputText id="email"
+						value="#{agendamentoBean.agendamento.emailResponsavel}"
+						required="true" size="40" />
 
-            <p:dataTable id="tabelaPessoas" value="#{agendamentoBean.agendamento.pessoas}" var="p"
-                         emptyMessage="Nenhum visitante adicionado.">
-                
-                <f:facet name="header">Lista de Visitantes do Grupo</f:facet>
+					<p:outputLabel value="Observações:" for="obs" />
+					<p:inputTextarea id="obs"
+						value="#{agendamentoBean.agendamento.observacoes}" rows="3"
+						cols="40" />
+				</h:panelGrid>
+			</p:panel>
 
-                <p:column headerText="Nome">
-                    <h:outputText value="#{p.nome}" />
-                </p:column>
+			<p:panel id="panelPessoa" header="Incluir Visitantes"
+				style="margin-bottom: 20px;">
+				<h:panelGrid columns="4" cellpadding="5">
+					<p:outputLabel value="Nome:" />
+					<p:inputText value="#{agendamentoBean.pessoa.nome}" />
 
-                <p:column headerText="CPF">
-                    <h:outputText value="#{p.cpf}" />
-                </p:column>
+					<p:outputLabel value="CPF:" />
+					<p:inputMask value="#{agendamentoBean.pessoa.cpf}"
+						mask="999.999.999-99" />
 
-                <p:column headerText="Ingresso">
-                    <h:outputText value="#{p.tipoIngresso}" />
-                </p:column>
+					<p:outputLabel value="Tipo Ingresso:" />
+					<p:selectOneMenu value="#{agendamentoBean.pessoa.tipoIngresso}"
+						style="width: 150px;">
+						<f:selectItem itemLabel="Inteira" itemValue="INTEIRA" />
+						<f:selectItem itemLabel="Meia" itemValue="MEIA" />
+						<f:selectItem itemLabel="Isento" itemValue="ISENTO" />
+					</p:selectOneMenu>
 
-                <p:column style="width: 50px; text-align: center;">
-                    <p:commandButton icon="pi pi-trash" 
-                                     action="#{agendamentoBean.removerPessoa(p)}"
-                                     process="@this"
-                                     update="tabelaPessoas"
-                                     styleClass="ui-button-danger ui-button-flat ui-button-sm"/>
-                </p:column>
-            </p:dataTable>
+					<p:commandButton value="Adicionar" icon="pi pi-plus"
+						action="#{agendamentoBean.adicionarPessoa}" process="panelPessoa"
+						update="tabelaPessoas panelPessoa growl"
+						styleClass="ui-button-secondary" />
+				</h:panelGrid>
+			</p:panel>
 
-            <br/>
+			<p:dataTable id="tabelaPessoas"
+				value="#{agendamentoBean.agendamento.pessoas}" var="p"
+				emptyMessage="Nenhum visitante adicionado.">
 
-            <div style="text-align: center;">
-                <p:commandButton value="Confirmar Agendamento Completo" 
-                                 action="#{agendamentoBean.gravar}" 
-                                 update="@form" 
-                                 icon="pi pi-check" 
-                                 style="width: 300px; height: 50px; font-weight: bold;"/>
-            </div>
+				<f:facet name="header">Lista de Visitantes do Grupo</f:facet>
 
-        </h:form>
+				<p:column headerText="Nome">
+					<h:outputText value="#{p.nome}" />
+				</p:column>
 
-    </ui:define>
+				<p:column headerText="CPF">
+					<h:outputText value="#{p.cpf}" />
+				</p:column>
+
+				<p:column headerText="Ingresso">
+					<h:outputText value="#{p.tipoIngresso}" />
+				</p:column>
+
+				<p:column style="width: 50px; text-align: center;">
+					<p:commandButton icon="pi pi-trash"
+						action="#{agendamentoBean.removerPessoa(p)}" process="@this"
+						update="tabelaPessoas"
+						styleClass="ui-button-danger ui-button-flat ui-button-sm" />
+				</p:column>
+			</p:dataTable>
+
+			<br />
+
+			<div style="margin-bottom: 20px; text-align: center;">
+				<p:selectBooleanCheckbox id="termo" required="true"
+					requiredMessage="Aceite o termo para continuar." />
+				<h:outputLabel
+					value=" Declaro que li e concordo com o Termo de Responsabilidade."
+					for="termo" style="font-weight: bold;" />
+			</div>
+
+			<div style="text-align: center;">
+				<p:commandButton value="Confirmar Agendamento Completo"
+					action="#{agendamentoBean.gravar}" update="@form"
+					icon="pi pi-check"
+					style="width: 300px; height: 50px; font-weight: bold;" />
+			</div>
+
+		</h:form>
+
+	</ui:define>
 
 </ui:composition>
 </html>

@@ -5,26 +5,28 @@ import br.com.ifsudestemg.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import java.io.Serializable;
 
-public class UsuarioDAO implements Serializable {
+public class UsuarioDAO extends DAO<Usuario> {
 
-    private static final long serialVersionUID = 1L;
+    public UsuarioDAO() {
+        super(Usuario.class);
+    }
 
-    public boolean existe(Usuario usuario) {
+    public Usuario existe(Usuario usuario) {
         EntityManager em = JPAUtil.getEntityManager();
+        
         try {
-            String jpql = "select u from Usuario u where u.login = :pLogin and u.senha = :pSenha";
+            TypedQuery<Usuario> query = em.createQuery(
+                    "SELECT u FROM Usuario u WHERE u.login = :login AND u.senha = :senha", 
+                    Usuario.class);
             
-            TypedQuery<Usuario> query = em.createQuery(jpql, Usuario.class);
-            query.setParameter("pLogin", usuario.getLogin());
-            query.setParameter("pSenha", usuario.getSenha());
-
-            query.getSingleResult();
-            return true;
-
+            query.setParameter("login", usuario.getLogin());
+            query.setParameter("senha", usuario.getSenha());
+            
+            return query.getSingleResult();
+            
         } catch (NoResultException e) {
-            return false;
+            return null;
         } finally {
             em.close();
         }

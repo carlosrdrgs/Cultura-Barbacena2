@@ -9,24 +9,65 @@
 
     <ui:define name="conteudo">
         
-        <p:panel header="Dashboard">
-            <h2>Bem-vindo ao Sistema de Gestão de Museus</h2>
-            <p>Selecione uma opção no menu acima para começar.</p>
+        <p:panel header="Visão Geral do Sistema">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>Olá, #{usuarioLogado.nomeCompleto}!</h2>
+                    <p style="color: #666;">Aqui está o resumo dos agendamentos em tempo real.</p>
+                </div>
+                <p:button value="Novo Agendamento" icon="pi pi-plus" 
+                          outcome="agendamento" styleClass="ui-button-outlined" />
+            </div>
             
             <p:divider />
             
-            <div style="display: flex; gap: 20px;">
-                <p:card style="width: 25rem; margin-bottom: 2em">
-                    <f:facet name="title">Museu Municipal</f:facet>
-                    <p>Status: Aberto</p>
-                    <p>Horário: 13h às 17:30h</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+                
+                <p:card style="width: 20rem; background: linear-gradient(to right, #e3f2fd, #ffffff); border-left: 5px solid #2196F3;">
+                    <f:facet name="header">
+                        <div style="text-align: center; padding-top: 15px;">
+                            <i class="pi pi-calendar" style="font-size: 3rem; color: #2196F3;"></i>
+                        </div>
+                    </f:facet>
+                    <f:facet name="title">
+                        <div style="text-align: center; font-size: 1.2rem;">Agendamentos</div>
+                    </f:facet>
+                    
+                    <div style="text-align: center; font-size: 2.5rem; font-weight: bold; color: #333;">
+                        #{dashboardBean.totalAgendamentos}
+                    </div>
                 </p:card>
 
-                <p:card style="width: 25rem; margin-bottom: 2em">
-                    <f:facet name="title">Museu da Loucura</f:facet>
-                    <p>Status: Aberto</p>
-                    <p>Horário: 09h às 17h</p>
+                <p:card style="width: 20rem; background: linear-gradient(to right, #e8f5e9, #ffffff); border-left: 5px solid #4CAF50;">
+                    <f:facet name="header">
+                        <div style="text-align: center; padding-top: 15px;">
+                            <i class="pi pi-users" style="font-size: 3rem; color: #4CAF50;"></i>
+                        </div>
+                    </f:facet>
+                    <f:facet name="title">
+                        <div style="text-align: center; font-size: 1.2rem;">Visitantes Confirmados</div>
+                    </f:facet>
+                    
+                    <div style="text-align: center; font-size: 2.5rem; font-weight: bold; color: #333;">
+                        #{dashboardBean.totalVisitantes}
+                    </div>
                 </p:card>
+                
+                <p:card style="width: 20rem; background: linear-gradient(to right, #fff3e0, #ffffff); border-left: 5px solid #FF9800;">
+                    <f:facet name="header">
+                        <div style="text-align: center; padding-top: 15px;">
+                            <i class="pi pi-building" style="font-size: 3rem; color: #FF9800;"></i>
+                        </div>
+                    </f:facet>
+                    <f:facet name="title">
+                        <div style="text-align: center; font-size: 1.2rem;">Museus Ativos</div>
+                    </f:facet>
+                    <div style="text-align: center; font-size: 2.5rem; font-weight: bold; color: #333;">
+                        2
+                    </div>
+                </p:card>
+
             </div>
             
         </p:panel>

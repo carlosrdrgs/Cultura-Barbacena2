@@ -10,14 +10,26 @@
     <ui:define name="conteudo">
 
         <h:form id="formLista">
+            <p:growl id="messages" showDetail="false" life="3000" />
+
             <p:panel header="Relatório de Visitas Agendadas">
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 10px;">
+                    <p:commandButton value="PDF" icon="pi pi-file-pdf" styleClass="ui-button-danger" ajax="false">
+                        <p:dataExporter type="pdf" target="tabela" fileName="agendamentos" />
+                    </p:commandButton>
+
+                    <p:commandButton value="Excel" icon="pi pi-file-excel" styleClass="ui-button-success" ajax="false">
+                        <p:dataExporter type="xlsxstream" target="tabela" fileName="agendamentos" />
+                    </p:commandButton>
+                </div>
 
                 <p:dataTable id="tabela" value="#{agendamentoBean.agendamentos}" var="agendamento"
                              rowKey="#{agendamento.id}"
                              paginator="true" rows="10" 
                              emptyMessage="Nenhum agendamento encontrado.">
 
-                    <p:column style="width:2rem" ariaHeaderText="Detalhes">
+                    <p:column style="width:2rem" exportable="false">
                         <p:rowToggler />
                     </p:column>
 
@@ -38,18 +50,27 @@
                     <p:column headerText="Horário">
                         <h:outputText value="#{agendamento.horarioVisita}" />
                     </p:column>
-
-                    <p:column headerText="Responsável">
-                        <h:outputText value="#{agendamento.emailResponsavel}" />
-                    </p:column>
                     
                     <p:column headerText="Cód. Confirmação">
                         <h:outputText value="#{agendamento.codigoConfirmacao}" style="font-weight: bold; color: blue;"/>
                     </p:column>
 
+                    <p:column headerText="Ações" exportable="false" style="width: 6rem; text-align: center;">
+                        <p:commandButton icon="pi pi-trash" 
+                                         action="#{agendamentoBean.remover(agendamento)}"
+                                         process="@this"
+                                         update="formLista"
+                                         styleClass="ui-button-danger ui-button-rounded ui-button-flat"
+                                         title="Excluir Agendamento">
+                            <p:confirm header="Confirmação" 
+                                       message="Tem certeza que deseja apagar este agendamento?" 
+                                       icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:column>
+
                     <p:rowExpansion>
                         <div style="padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; margin: 10px;">
-                            <h4>Visitantes deste grupo:</h4>
+                            <h4>Registro de Comparecimento (Check-in):</h4>
                             
                             <p:dataTable value="#{agendamento.pessoas}" var="pessoa" size="small">
                                 <p:column headerText="Nome do Visitante">
@@ -64,8 +85,11 @@
                                     <h:outputText value="#{pessoa.tipoIngresso}" />
                                 </p:column>
 
-                                <p:column headerText="Compareceu?">
-                                    <p:selectBooleanCheckbox value="#{pessoa.compareceu}" disabled="true" />
+                                <p:column headerText="Compareceu?" style="text-align: center; width: 100px;">
+                                    <p:selectBooleanCheckbox value="#{pessoa.compareceu}">
+                                        <p:ajax listener="#{agendamentoBean.atualizarPresenca(pessoa)}" 
+                                                update=":formLista:messages" />
+                                    </p:selectBooleanCheckbox>
                                 </p:column>
                             </p:dataTable>
                         </div>
@@ -73,6 +97,12 @@
 
                 </p:dataTable>
             </p:panel>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
+
         </h:form>
 
     </ui:define>

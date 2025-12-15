@@ -6,8 +6,12 @@
     <display-name>Sistema Museus</display-name>
 
     <welcome-file-list>
-        <welcome-file>login.xhtml</welcome-file>
+        <welcome-file>agendamento.xhtml</welcome-file>
     </welcome-file-list>
+    
+    <session-config>
+        <session-timeout>2</session-timeout>
+    </session-config>
 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
